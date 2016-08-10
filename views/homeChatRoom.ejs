@@ -1,0 +1,222 @@
+<html>
+
+	<head>
+		<link rel="stylesheet" href="style.css"> 
+		 <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+
+        
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	</head>
+
+
+	<body>
+
+		<div id="join_room">
+			Enter your name:
+				<input type="text" id="name"/>
+
+		</div>
+ 
+
+		<div class="message_div">
+			<input type="text" id="message_input"/>			
+		</div>
+		<div id="chatlog"></div>
+
+		<select id="pm_dropdown">
+			<option value="nobody" disabled="disabled" selected="selected"> Select a person to PM </option>
+			<option value="nobody">Nobody</option>
+		</select>
+
+		<div id="people_table">
+			<b id="title_who">Who's Online?</b>
+			<div id="people_log"> </div>
+		</div>
+
+	</body>
+
+	        <script type ="text/javascript">
+        var client_name_color = null;
+        	$(document).ready(function(){
+        		var socketio = io.connect();
+        		$("#message_div").hide();
+        		$("#message_input").prop('disabled',true);
+        		
+       
+
+        		$("#name").keypress(function(e){
+        			if(e.which == 13){
+        				var name = $("#name").val();
+        				if(name != ""){
+        					e.preventDefault();
+        					//we're both able to tell the server our client has joined and to pass the session id to this variable
+        					var session_id = (socketio.emit("join", name)).id;
+        					$("#name").detach();
+        					$("#message_div").show();
+        					$("#message_input").prop('disabled',false);
+        					$("#join_room").text("Ben Kandov's Chat Room");
+        					$("#join_room").css("font-size","2em");
+
+        				}
+        			}
+        		});
+
+        		socketio.on("message_to_client", function(data){
+    				$("#chatlog").append("<hr/>" +   data['message']);
+    				document.getElementById("chatlog").scrollTop = document.getElementById("chatlog").scrollHeight;
+
+ 
+        		});
+        		function sendMessage() {
+   			 		var msg = document.getElementById("message_input").value;
+   			 		var pm_value = $("#pm_dropdown option:selected").text();
+
+    				socketio.emit("message_to_server", { message : msg, name :pm_value});
+				}
+				$("#message_input").keypress(function(e){
+					if(e.which == 13){
+						sendMessage();
+						
+						$("#message_input").val('');
+					}
+				});
+
+				socketio.on("update", function(msg){
+					$("#chatlog").append("<div class='server_message'> <hr/>"+msg + "</div>");
+				});
+
+				socketio.on("update-people", function(data){
+					$("#people_log").empty();
+					
+					//clear out dropdown for PMing and repopulate it 
+					$("option").each(function(){
+						$(this).remove();
+					});
+
+					$("#pm_dropdown").append("<option value='nobody' selected='selected'> Select a person to PM  </option>");
+
+					var people = data['peep'];
+
+					var colors = data['colors'];
+					var color = null;
+					//repopulate dropdown PM and "who's online" dashboard
+
+					$.each(people, function(socketid, name){	
+						color = colors[socketid];
+						console.log(name);
+						$("#people_log").append("<b  style='color:"+ color  +"''> <br/> "+name + "</div>");
+						$("#pm_dropdown").append("<option value='"+name+"'> "+name + "</option>");
+					});
+				});
+
+
+        	});
+
+
+
+
+		</script>
+	<style>
+
+		body{
+			background-color: #B7AFA3;
+		}
+		option{
+			background-color: #ACD1E9;
+			padding:30px;
+			text-align: center;
+			font-size: 14px;
+		}
+		#pm_dropdown{
+			font-size: 11px;
+			text-align: center;
+			position: absolute;
+			right: 3%;
+			bottom:5%;
+			background-color: #ACD1E9;
+			padding:10px;
+			width: 15%;
+			height: 10%;
+		}
+		#join_room{
+			font-size: 1.3em;
+			color:#F5FAFA;
+
+		}
+		#name{
+			font-size: 18px;
+			height:6%;
+			width: 40%;
+			position: absolute;
+			left:20%;
+		}
+		#title_who{
+		
+			font-size:1.4em;
+			color:#F5FAFA;
+		
+		}
+		#chatlog{
+			position: absolute;
+			top:10%;
+			border-width: 10px;
+			font-size: 15px;
+			overflow:auto;
+			width:70%;
+			height:60%;
+			border-style: solid;
+			border-color: #ACD1E9;
+			border-radius: 25px;
+			padding: 10px;
+			background-color: #F5FAFA;
+		}
+		.message_div{
+			position:fixed;
+			bottom:0%;
+			height:15%;
+			width:80%;
+		}
+		#message_input{
+
+			font-size: 15px;
+			border-style: solid;
+			border-color: #ACD1E9;
+			overflow: auto;
+			width:100%;
+			height:70%;
+			background-color: #F5FAFA;
+		}
+		.server_message{
+			color:#6D929B; 		
+		}
+		#people_log{
+			padding:15px;
+			border-style: solid;
+			border-color: #ACD1E9;
+			border-width: 10px;
+			overflow: auto;
+			height: 100%;
+			background-color: #F5FAFA;
+			font-size: 18px;
+
+		}
+		#people_table{
+			
+			position:fixed;
+			bottom: 30%;
+			right:5%;
+			height:60%;
+			width:15%;
+
+		}
+
+
+		
+
+	</style>
+
+</html>
