@@ -67,16 +67,36 @@ var name_color = {};
 //socket.emit will update locally whereas io.sockets.emit will update across clients
 io.sockets.on('connection', function(socket){
   socket.on("join", function(name){
+    Message.find({}, function(docs){
+      console.log("test");
+        io.sockets.emit("message_to_client", {message: /**"<b style='color:"  + name_color[socket.id]  + "'>"  +"</b> : " +**/docs});
+        console.log(docs);
+       process.exit();
+  
+
+    });
+
+
     var escaped_name = sanitize.escape(name);
     people[socket.id] = escaped_name;
 
     //
     client_name_color = "rgb("+Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255)+ "," + Math.floor(Math.random() * 255) + ")";
     //
+
+
+
+
+
+
     name_color[socket.id] = client_name_color;
     socket.emit("update", "Succesfully connected to server.");
     io.sockets.emit("update", "<b id='client_name_" +  socket.id.replace('/#', '')  + "'>" + name + " has joined the chat.");
     io.sockets.emit("update-people", {peep:people,colors:name_color});
+
+    //let's loop through the messages doc to get them all in an array and append them
+
+
     socket.send(socket.id);//this should send our client's session id back to the client side 
   
   });

@@ -1,5 +1,5 @@
 {
-  "name": "express_chat_server",
+  "name": "simpleExpressChatRoom",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "express": "~4.13.4",
+    "jsonwebtoken": "^7.1.7",
     "main": "server.js",
     "mongoose": "latest",
     "morgan": "~1.7.0",

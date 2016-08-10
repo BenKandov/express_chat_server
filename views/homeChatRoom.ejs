@@ -54,7 +54,8 @@
         				if(name != ""){
         					e.preventDefault();
         					//we're both able to tell the server our client has joined and to pass the session id to this variable
-        					var session_id = (socketio.emit("join", name)).id;
+        					var data =sockeio.emit("join",name);
+        					
         					$("#name").detach();
         					$("#message_div").show();
         					$("#message_input").prop('disabled',false);
@@ -107,7 +108,7 @@
 
 					$.each(people, function(socketid, name){	
 						color = colors[socketid];
-						console.log(name);
+						
 						$("#people_log").append("<b  style='color:"+ color  +"''> <br/> "+name + "</div>");
 						$("#pm_dropdown").append("<option value='"+name+"'> "+name + "</option>");
 					});
