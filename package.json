@@ -1,22 +1,43 @@
 {
-  "name": "simpleExpressChatRoom",
+  "name": "express_chat_server",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node app.js"
   },
   "dependencies": {
     "body-parser": "~1.15.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "express": "~4.13.4",
-    "jsonwebtoken": "^7.1.7",
-    "main": "server.js",
     "mongoose": "latest",
     "morgan": "~1.7.0",
-    "name": "node-token-jwt",
     "serve-favicon": "~2.3.0",
     "socket.io": "latest",
     "validator": "latest"
-  }
+  },
+  "description": "chat server written in express with mongodb. constantly updated",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benkandov/express_chat_server.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "irc",
+    "mongodb",
+    "mongoose",
+    "heroku"
+  ],
+  "author": "benkandov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benkandov/express_chat_server/issues"
+  },
+  "engines":{
+    "node":"4.1.1"
+    },
+  "homepage": "https://github.com/benkandov/express_chat_server#readme"
 }
