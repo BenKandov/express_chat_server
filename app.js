@@ -20,7 +20,7 @@ var app = express();
 
 //configuration
 
-mongoose.connect(config.database);
+mongoose.connect(config.databaseMongo);
 var port = process.env.PORT  ||  8888;
 app.set('superSecret',config.secret);
 
