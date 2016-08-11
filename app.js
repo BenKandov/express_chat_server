@@ -63,18 +63,10 @@ var client_name_color = null;
 var name_color = {};
 
 
-
 //socket.emit will update locally whereas io.sockets.emit will update across clients
 io.sockets.on('connection', function(socket){
   socket.on("join", function(name){
-    Message.find({}, function(docs){
-      console.log("test");
-        io.sockets.emit("message_to_client", {message: /**"<b style='color:"  + name_color[socket.id]  + "'>"  +"</b> : " +**/docs});
-        console.log(docs);
-       process.exit();
-  
 
-    });
 
 
     var escaped_name = sanitize.escape(name);
@@ -94,10 +86,21 @@ io.sockets.on('connection', function(socket){
     io.sockets.emit("update", "<b id='client_name_" +  socket.id.replace('/#', '')  + "'>" + name + " has joined the chat.");
     io.sockets.emit("update-people", {peep:people,colors:name_color});
 
+
+ 
+
     //let's loop through the messages doc to get them all in an array and append them
 
 
-    socket.send(socket.id);//this should send our client's session id back to the client side 
+   Message.find({}, function(err,docs){
+       console.log(docs);
+       for(var i =0; i< docs.length;i++){
+          io.sockets.emit("message_to_client", {message: "<b style='color:"  + docs[i].color  + "'>" + docs[i].username +"</b> : " +docs[i].content});
+       }
+    });
+
+
+    
   
   });
   socket.on("disconnect", function(){
@@ -133,7 +136,8 @@ io.sockets.on('connection', function(socket){
       io.sockets.emit("message_to_client", {message: "<b style='color:"  + name_color[socket.id]  + "'>" + people[socket.id] +"</b> : " +escaped_message});
             var newMessage = Message({
         content : escaped_message,
-        username :people[socket.id]
+        username :people[socket.id],
+        color : name_color[socket.id]
       });
       newMessage.save(function(err) {
         console.log("saved post");

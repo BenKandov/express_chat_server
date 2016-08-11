@@ -3,7 +3,8 @@ var Schema  = mongoose.Schema;
 
 var messageSchema = new Schema({
 	content: String,
-	username: String
+	username: String,
+	color: String
 });
 
 //now it's a mongo ready model
