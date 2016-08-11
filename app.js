@@ -19,8 +19,8 @@ var app = express();
 
 
 //configuration
-
-mongoose.connect(config.databaseMongo);
+var dbConnect = process.env.MONGODB_URI || config.databaseMongo;
+mongoose.connect(dbConnect);
 var port = process.env.PORT  ||  8888;
 app.set('superSecret',config.secret);
 
