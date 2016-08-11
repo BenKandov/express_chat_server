@@ -19,8 +19,9 @@ var app = express();
 
 
 //configuration
-mongoose.connect(config.database);
-var port = process.env.PORT || 8888;
+var url = process.env.OPENSHIFT_MONGO_DB_URL || config.database;
+mongoose.connect(url);
+var port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT  ||  8888;
 app.set('superSecret',config.secret);
 
 
