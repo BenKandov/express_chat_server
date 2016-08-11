@@ -19,7 +19,7 @@ var app = express();
 
 
 //configuration
-var dbConnect = process.env.MONGODB_URI || config.databaseMongo;
+var dbConnect = process.env.MONGODB_URI || config.database;
 mongoose.connect(dbConnect);
 var port = process.env.PORT  ||  8888;
 app.set('superSecret',config.secret);
